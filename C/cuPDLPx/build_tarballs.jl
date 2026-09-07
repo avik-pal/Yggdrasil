@@ -5,13 +5,13 @@ include(joinpath(YGGDRASIL_DIR, "fancy_toys.jl"))
 include(joinpath(YGGDRASIL_DIR, "platforms", "cuda.jl"))
 
 name = "cuPDLPx"
-version = v"0.2.2"
+version = v"0.3.0"
 
 
 sources = [
     GitSource(
         "https://github.com/MIT-Lu-Lab/cuPDLPx.git",
-        "4513094a4dfec9be1da5df35f2691205e090bde0",
+        "3a6e31059c1554dd74e6e61277c6008610bacf41",
     ),
 ]
 
@@ -30,6 +30,10 @@ ln -s ${CUDA_HOME}/lib ${CUDA_HOME}/lib64
 cmake -B build -S . \
     -DCMAKE_INSTALL_PREFIX=$prefix \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_STANDARD=20 \
+    -DCMAKE_CXX_STANDARD_REQUIRED=ON \
+    -DCMAKE_CUDA_STANDARD=20 \
+    -DCMAKE_CUDA_STANDARD_REQUIRED=ON \
     -DCMAKE_TOOLCHAIN_FILE=${CMAKE_TARGET_TOOLCHAIN} \
     -DCUDA_TOOLKIT_ROOT_DIR=$CUDA_HOME \
     -DCUPDLPX_BUILD_SHARED_LIB=ON \
@@ -48,7 +52,7 @@ products = [
     # ExecutableProduct("cupdlpx", :cupdlpx),
 ]
 
-platforms = CUDA.supported_platforms(; min_version = v"12.4", max_version = v"13.0.999")
+platforms = CUDA.supported_platforms(; min_version = v"12.4")
 filter!(p -> arch(p) == "x86_64", platforms)
 
 for platform in platforms
